@@ -8,15 +8,15 @@ import java.io.FileInputStream;
 import java.sql.*;
 import java.util.Properties;
 
-public class ItemsList extends JFrame {
+public class ItemsListTable2 extends JPanel {
 
     private JPanel itemsListPanel;
-    private JTable itemsListTable;
+    private JTable jTable;
 
     Properties p = new Properties();
 
 
-    public ItemsList() {
+    public void ItemsListTable2() {
 
         try {
             p.load(new FileInputStream("src/main/resources/dbsettings.properties"));
@@ -27,14 +27,18 @@ public class ItemsList extends JFrame {
         itemsListPanel = new JPanel();
         itemsListPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         itemsListPanel.setLayout(new BorderLayout(0, 0));
-        setContentPane(itemsListPanel);
+//        setContentPane(itemsListPanel);
         setVisible(true);
 
         String[] columns = {"ID", "Brand", "Name", "Color", "Size", "Price", "Category"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
-        itemsListTable = new JTable(model);
+        JTable itemsListTable = new JTable(model);
         itemsListPanel.add(new JScrollPane(itemsListTable), BorderLayout.CENTER);
+
+        JLabel label = new JLabel();
+        label.setText("<html><table><tr><td>" + itemsListTable.getModel().toString() + "</td></tr></table></html>");
+        itemsListPanel.add(label, BorderLayout.NORTH);
 
         repaint();
         revalidate();
@@ -71,9 +75,5 @@ public class ItemsList extends JFrame {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        new ItemsList();
     }
 }
