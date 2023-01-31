@@ -1,5 +1,7 @@
 package ShoeShop;
 
+import DBTables.*;
+
 import java.awt.*;
 import java.sql.*;
 import javax.swing.*;
@@ -19,8 +21,11 @@ public class ShoeShopUI2 extends JFrame {
     private int height = 600;
     private int scrollpaneHeight = 400;
 
-    public ShoeShopUI2() {
-        frame = new JFrame("ShoeShop");
+    Customers customer;
+
+    public ShoeShopUI2(Customers c) {
+        customer = c;
+        frame = new JFrame("Shoe Shop");
         topPanel = new JPanel();
         centerTopPanel = new JPanel();
         centerBottomPanel = new JPanel();
@@ -31,7 +36,7 @@ public class ShoeShopUI2 extends JFrame {
         centerBottomPanel.setBackground(Color.YELLOW);
         bottomPanel.setBackground(Color.BLUE);
 
-        welcomeMessage = new JLabel("Welcome to the Swing Application");
+        welcomeMessage = new JLabel("Welcome to the Shoe Shop " + customer.getFirst_name() + " " + customer.getLast_name() + "!");
         topPanel.add(welcomeMessage);
 
         try {
@@ -52,10 +57,7 @@ public class ShoeShopUI2 extends JFrame {
             int columnCount = rsmd.getColumnCount();
 
             // Get column names
-            String[] columnNames = new String[columnCount];
-            for (int i = 1; i <= columnCount; i++) {
-                columnNames[i - 1] = rsmd.getColumnName(i);
-            }
+            String[] columnNames = {"ID", "Brand", "Name", "Color", "Size", "Price", "Category"};
 
             // Get table data
             rs.last();
@@ -73,7 +75,7 @@ public class ShoeShopUI2 extends JFrame {
             JTable table = new JTable(data, columnNames);
             table.setFillsViewportHeight(true);
             JScrollPane scrollPane = new JScrollPane(table);
-            scrollPane.setPreferredSize(new Dimension(width, scrollpaneHeight));
+            scrollPane.setPreferredSize(new Dimension(width-5, scrollpaneHeight));
 
             centerTopPanel.add(scrollPane);
 
@@ -94,10 +96,6 @@ public class ShoeShopUI2 extends JFrame {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static void main(String[] args) {
-        new ShoeShopUI2();
     }
 }
 

@@ -10,7 +10,7 @@ public class Main {
 
 //        new LoginForm();
 //        new ItemsList();
-        new ShoeShop(mock);
+        new ShoeShopUI2(mock);
     }
 
     public static void main(String[] args) {

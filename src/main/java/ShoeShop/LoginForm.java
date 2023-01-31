@@ -67,7 +67,7 @@ public class LoginForm {
                 Customers c = Repository.getCustomer(email, password);
                 JOptionPane.showMessageDialog(frame, "Login accepted.A");
                 frame.dispose();
-                new ShoeShop(c);
+                new ShoeShopUI2(c);
             } else {
                 JOptionPane.showMessageDialog(frame, "Login failed.");
             }

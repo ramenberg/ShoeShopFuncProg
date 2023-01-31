@@ -19,7 +19,6 @@ public class ShoeShop extends JFrame {
         customer = c;
         Repository repo = new Repository();
 
-
         JFrame newFrame = new JFrame("Welcome to ShoeShop " + customer.getFirst_name() + " " + customer.getLast_name() + "!");
         newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         newFrame.setLocationRelativeTo(null);

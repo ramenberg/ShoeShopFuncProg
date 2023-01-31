@@ -68,38 +68,29 @@ public class Repository {
             return null;
         }
     }
-
-//    static List<Items> getAvailableItems() {
-//        List<Items> items = new ArrayList<>();
+//    static Items getItemFromTable(int id) {
+//        new Repository();
 //        try (Connection con = DriverManager.getConnection(
 //                p.getProperty("connectionString"),
 //                p.getProperty("name"),
 //                p.getProperty("password"))) {
-//            String sql = "SELECT i.id, b.name AS brand, i.name, s.size, MIN(i.price) AS price, c.name AS color, GROUP_CONCAT(DISTINCT ca.name) AS category "
-//                    + "FROM items i "
-//                    + "JOIN brand b ON i.brand_id = b.id "
-//                    + "JOIN colors c ON i.color_id = c.id "
-//                    + "JOIN sizes s ON i.size_id = s.id "
-//                    + "JOIN Has_category hc ON i.id = hc.item_id "
-//                    + "JOIN Category ca ON hc.category_id = ca.id "
-//                    + "WHERE i.stock_balance > 0 "
-//                    + "GROUP BY i.id, b.name, i.name, s.size, c.name "
-//                    + "ORDER BY b.name, i.name, c.name, s.size";
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery(sql);
-//            while (rs.next()) {
-//                int id = rs.getInt("id");
-//                String brand = rs.getString("brand");
-//                String name = rs.getString("name");
-//                String size = rs.getString("size");
-//                double price = rs.getDouble("price");
-//                String color = rs.getString("color");
-//                String category = rs.getString("category");
-//                items.add(new Items(id, brand, name, size, price, color, category));
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM items WHERE id = " + id);
+//            if (rs.next()) {
+//                return new Items(
+//                        rs.getInt("id"),
+//                        rs.getString("name"),
+//                        rs.getString("brand"),
+//                        rs.getString("color"),
+//                        rs.getString("size"),
+//                        rs.getInt("price"),
+//                        rs.getString("category"));
+//            } else {
+//                return null;
 //            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            return null;
 //        }
-//        return items;
 //    }
 }
