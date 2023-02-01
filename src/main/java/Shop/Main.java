@@ -8,17 +8,19 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static Customer c;
-    private static List<Integer> cartItems = new ArrayList<>();
-    private static List<Item> allItemsInStockList = new ArrayList<>();
+    private static List<Item> cartItems = new ArrayList<>();
 
     public static void main(String[] args) {
-        Repository r = new Repository();
+        new Repository();
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("Welcome to the shop!");
+        System.out.println("Welcome to the Shoe Shop!");
+        System.out.println("----------------------------");
+        System.out.println("What do you want to do? ");
+        System.out.println();
         System.out.println("1. Login");
         System.out.println("2. Exit");
+        System.out.println();
         System.out.print("Enter your choice: ");
         int choice = sc.nextInt();
         sc.nextLine();
@@ -29,34 +31,38 @@ public class Main {
                 String email = sc.nextLine();
                 System.out.print("Enter your password: ");
                 char[] password = sc.nextLine().toCharArray();
-                c = Repository.validateLoginReturnCustomer(email, password); // kolla om inloggningen lyckades
-                if (c != null) { // om inloggningen lyckades finns en kund sparad, annars null
+                Customer customer = Repository.validateLoginReturnCustomer(email, password); // kolla om inloggningen lyckades
+                if (customer != null) { // om inloggningen lyckades finns en kund sparad, annars null
                     // loop för programmet om inloggningen lyckades
-                    while (true) {
-                        System.out.println("Login successful!");
-                        System.out.println("Welcome " + c.getFirst_name() + c.getLast_name() + "!");
+                    System.out.println();
+                    System.out.println("Login successful.");
+                    System.out.println("Welcome " + customer.getFirst_name() + " " + customer.getLast_name() + "!");
 
+                    while (true) {
+                        int orderId;
                         // början av val
 
                         System.out.println("----------------------------");
                         System.out.println("What do you want to do? ");
-                        System.out.println("1. Select item to add to cart");
+                        System.out.println("1. Select an item to add to cart");
                         System.out.println("2. Exit");
                         System.out.println("----------------------------");
                         System.out.print("Enter your choice: ");
                         choice = sc.nextInt();
                         sc.nextLine();
                         switch (choice) {
-                            case 1 -> Shopping s = new Shopping();
+                            case 1 -> {
+                                cartItems = Shopping.startShopping();
+                            }
                             case 2 -> {
                                 System.out.println("Goodbye!");
                                 System.exit(0);
                             }
                             default -> System.out.println("Invalid choice!");
                         }
-                        if (s != null) {
+                        if (cartItems.size() != 0) {
                             System.out.println("----------------------------");
-                            System.out.println("Do you want to continue shopping? ");
+                            System.out.println("Do you want to checkout? ");
                             System.out.println("1. Yes");
                             System.out.println("2. No");
                             System.out.println("Enter your choice: ");
@@ -64,14 +70,19 @@ public class Main {
                             sc.nextLine();
                             switch (choice) {
                                 case 1 -> {
-                                    List<Item> cartItems = Shopping.startShopping();
+//                                    List<Item> cartItems = Shopping.startShopping();
                                     // checkout
                                     if (cartItems!= null) {
                                         System.out.println("----------------------------");
-                                        System.out.println("Your shopping cart is:");
+                                        System.out.println("Your shopping cart has the following " + cartItems.size() + " item(s):");
                                         System.out.println("----------------------------");
                                         for (Item i : cartItems) {
-                                            System.out.println(i);
+                                            System.out.println(
+                                                    i.getBrand_id().getName() + " " +
+                                                    i.getModel() + ", " +
+                                                    i.getColor_id().getName() + ", " +
+                                                    i.getSize_id().getSize() + ", Price: " +
+                                                    i.getPrice() +" SEK");
                                         }
                                         System.out.println("Subtotal: " + Shopping.getSubtotal() + " SEK. ");
                                         System.out.println("----------------------------");
@@ -82,19 +93,39 @@ public class Main {
                                         choice = sc.nextInt();
                                         switch (choice) {
                                             case 1 -> {
+                                                if (cartItems.size() > 1) {
+                                                    orderId = Repository.addToOrder(customer.getId(), (cartItems.get(0)).getId());
+                                                } else if (cartItems.size() == 1) {
+                                                    orderId = Repository.addToOrder(customer.getId(), cartItems.get(0).getId());
+                                                    if (orderId != -1) {
+                                                        cartItems.stream().skip(1).forEach(i -> {
+                                                            Repository.addToOrder(orderId, i.getId());
+                                                        });
+                                                    }
+                                                }else{
+                                                    System.out.println("----------------------------");
+                                                    System.out.println("Your cart is empty!");
+                                                    System.out.println("----------------------------");
+                                                    break;
+                                                }
+                                                // TODO koppla till SP addToCart
                                                 System.out.println("----------------------------");
                                                 System.out.println("Your order has been submitted!");
                                                 System.out.println("----------------------------");
-                                                System.out.println("Your order is:");
-                                                System.out.println("----------------------------");
-                                                for (Item i : cartItems) {
-                                                    System.out.println(i);
-                                                }
+                                                // TODO lägga in ordernummer istället?
+//                                                System.out.println("Your order is:");
+//                                                System.out.println("----------------------------");
+//                                                for (Item i : cartItems) {
+//                                                    System.out.println(i);
+//                                                }
                                                 System.out.println("Subtotal: " + Shopping.getSubtotal() + " SEK. ");
                                                 System.out.println("----------------------------");
                                                 System.out.println("Thanks for shopping!");
                                                 System.exit(0);
                                             }
+
+
+
                                             case 2 -> {
                                                 System.out.println("----------------------------");
                                                 System.out.println("Your order has been cancelled!");

@@ -5,7 +5,7 @@ import DBTables.Item;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static Shop.Repository.addToCart;
+//import static Shop.Repository.addToCart;
 import static Shop.Repository.getAllItemsInStock;
 
 public class ItemSelector {

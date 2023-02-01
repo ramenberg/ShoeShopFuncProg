@@ -18,7 +18,6 @@ public class Repository {
         }
     }
     public static boolean validateLogin(String email, char[] password) {
-        new Repository();
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
                 p.getProperty("name"),
@@ -35,7 +34,6 @@ public class Repository {
     }
 
     public static Customer validateLoginReturnCustomer(String email, char[] password) {
-        new Repository();
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
                 p.getProperty("name"),
@@ -52,8 +50,7 @@ public class Repository {
                         rs.getString("address"),
                         rs.getString("city"),
                         rs.getString("email"),
-                        rs.getString("phone_number"),
-                        rs.getString("password").toCharArray());
+                        rs.getString("phone_number"));
             } else {
                 // ingen kund hittades/ felaktig inloggning
                 return null;
@@ -64,39 +61,7 @@ public class Repository {
         }
     }
 
-//    public static Customer getCustomer(String email, char[] password) {
-//        new Repository();
-//        try (Connection con = DriverManager.getConnection(
-//                p.getProperty("connectionString"),
-//                p.getProperty("name"),
-//                p.getProperty("password"))) {
-//            Statement st = con.createStatement();
-//            ResultSet rs = st.executeQuery("SELECT * FROM customer " +
-//                    "WHERE email = '" + email + "' " +
-//                    "AND password = '" + new String(password) + "'");
-//            if (rs.next()) {
-//                return new Customer(
-//                        rs.getInt("id"),
-//                        rs.getString("first_name"),
-//                        rs.getString("last_name"),
-//                        rs.getString("address"),
-//                        rs.getString("city"),
-//                        rs.getString("email"),
-//                        rs.getString("phone_number"),
-//                        rs.getString("password").toCharArray());
-//            } else {
-//                System.out.println("No customer found.");
-//                return null;
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            System.out.println("SQL exception");
-//            return null;
-//        }
-//    }
-
     public static ArrayList<Item> getAllItemsInStock() {
-        new Repository();
         ArrayList<Item> allItemsList = new ArrayList<>();
         Map<Integer, List<Category>> itemCategoriesMap = new HashMap<>();
 
@@ -150,56 +115,33 @@ public class Repository {
         }
     }
 
-//    public static ArrayList<Category> getAllCategories() {
-//        new Repository();
-//        ArrayList<Category> allCategoriesList = new ArrayList<>();
-//        String sql= "SELECT cat.*, hc.* " +
-//                "FROM category cat " +
-//                "JOIN has_category hc ON cat.id = hc.category_id";
-//
-//        try (Connection con = DriverManager.getConnection(
-//                p.getProperty("connectionString"),
-//                p.getProperty("name"),
-//                p.getProperty("password"))) {
-//            Statement st = con.createStatement();
-//            ResultSet rs = st.executeQuery(sql);
-//
-//            // list of all categories
-//            while (rs.next()) {
-//                allCategoriesList.add(new Category(
-//                        rs.getInt("cat.id"),
-//                        rs.getString("cat.name")));
-//            }
-//            return allCategoriesList;
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//            System.out.println("SQL exception");
-//            return null;
-//        }
-//    }
-
-    public static int addToCart(int customer_id, int item_id) {
-        new Repository();
-        int items;
+    public static int addToOrder(int customer_id, int item_id) { // TODO ta in orderid? kan vara null eller tilldelat
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
                 p.getProperty("name"),
                 p.getProperty("password"))) {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM item " +
-                    "WHERE id = '" + item_id + "'");
-            if (rs.next()) {
-                items = rs.getInt("id");
-                System.out.println("Item added to cart.");
-                return items;
+            CallableStatement cStmt = con.prepareCall("{call AddToCart(?, ?, ?, ?, ?)}");
+            cStmt.setInt(1, 0);
+            cStmt.setInt(2, customer_id);
+            cStmt.setInt(3, item_id);
+            cStmt.registerOutParameter(4, java.sql.Types.INTEGER); // TODO ta bort denna utparameter?
+            cStmt.registerOutParameter(5, java.sql.Types.INTEGER);
+            cStmt.execute();
+            int result = cStmt.getInt(4);
+            if (result == 1) {
+                System.out.println("Item added to the cart successfully.");
+                return cStmt.getInt(5); // returnerar orderid
+            } else if (result == 0) {
+                System.out.println("Item is out of stock.");
+                return -1;
             } else {
-                System.out.println("Item not found.");
-                return 0;
+                System.out.println("An error occurred while adding the item to the cart.");
+                return -1;
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            System.out.println("SQL exception");
-        } return 0;
+            System.out.println("An error occurred while calling the AddToCart stored procedure: " + ex.getMessage());
+        }
+        return -1;
     }
 
 //    public static void main(String[] args) {
@@ -226,4 +168,5 @@ public class Repository {
 //        }
 //
 //    }
+
 }
