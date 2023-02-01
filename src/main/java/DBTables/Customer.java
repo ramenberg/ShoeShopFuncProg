@@ -1,24 +1,29 @@
 package DBTables;
 
-public class Customers {
+public class Customer {
 
     private int id;
     private String first_name;
     private String last_name;
     private String address;
     private String city;
-    private String email;
     private String phone_number;
-    private String password;
+    private String email;
+    private char[] password;
 
-    public Customers(int id, String first_name, String last_name, String address, String city, String email, String phone_number, String password) {
+    public Customer(int id, String first_name, String last_name, String address, String city, String phone_number, String email, char[] password) {
         this.id = id;
         this.first_name = first_name;
         this.last_name = last_name;
         this.address = address;
         this.city = city;
-        this.email = email;
         this.phone_number = phone_number;
+        this.email = email;
+        this.password = password;
+    }
+
+    public Customer(String email, char[] password) {
+        this.email = email;
         this.password = password;
     }
 
@@ -78,11 +83,11 @@ public class Customers {
         this.phone_number = phone_number;
     }
 
-    public String getPassword() {
+    public char[] getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(char[] password) {
         this.password = password;
     }
 }

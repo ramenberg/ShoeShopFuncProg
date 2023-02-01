@@ -1,11 +1,11 @@
 package DBTables;
 
-public class Sizes {
+public class Size {
 
     private int id;
     private String size;
 
-    public Sizes(int id, String size) {
+    public Size(int id, String size) {
         this.id = id;
         this.size = size;
     }

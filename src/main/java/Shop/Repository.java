@@ -1,13 +1,10 @@
 package Shop;
 
-import DBTables.Customers;
-import DBTables.Items;
+import DBTables.*;
 
 import java.io.FileInputStream;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class Repository {
 
@@ -27,68 +24,28 @@ public class Repository {
                 p.getProperty("name"),
                 p.getProperty("password"))) {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM customers WHERE email = '" + email + "' AND password = '" + new String(password) + "'");
+            ResultSet rs = st.executeQuery("SELECT * FROM customers " +
+                    "WHERE email = '" + email + "' " +
+                    "AND password = '" + new String(password) + "'");
             return rs.next();
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
         }
     }
-    public static List<String> getBrandsAndNames() {
-        new Repository();
-        List<String> brandsAndNames = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(
-                p.getProperty("connectionString"),
-                p.getProperty("name"),
-                p.getProperty("password"))) {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT DISTINCT Items.name AS item_name, Brand.name AS brand_name " +
-                    "FROM Items " +
-                    "JOIN Brand ON Items.brand_id = Brand.id");
-            while (rs.next()) {
-                brandsAndNames.add(rs.getString("brand_name") + " " + rs.getString("item_name"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } return brandsAndNames;
-    }
-    public static List<ItemDetails> getItemsByBrandAndName(String brand, String name) {
-        new Repository();
-        List<ItemDetails> items = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(
-                p.getProperty("connectionString"),
-                p.getProperty("name"),
-                p.getProperty("password"))) {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT i.id, b.name as brand_name, i.name, s.size, c.name as color_name, i.price, i.stock_balance FROM Items i " +
-                    "JOIN Brand b ON i.brand_id = b.id " +
-                    "JOIN Sizes s ON i.size_id = s.id " +
-                    "JOIN Colors c ON i.color_id = c.id " +
-                    "WHERE b.name = '" + brand + "' AND i.name = '" + name + "' AND i.stock_balance > 0 ");
-            while (rs.next()) {
-                items.add(new ItemDetails(
-                        rs.getInt("id"),
-                        rs.getString("brand_name"),
-                        rs.getString("name"),
-                        rs.getString("color_name"),
-                        rs.getString("size"),
-                        rs.getDouble("price")));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } return items;
-    }
 
-        public static Customers getCustomer(String email, char[] password) {
+    public static Customer getCustomer(String email, char[] password) {
         new Repository();
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
                 p.getProperty("name"),
                 p.getProperty("password"))) {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM customers WHERE email = '" + email + "' AND password = '" + new String(password) + "'");
+            ResultSet rs = st.executeQuery("SELECT * FROM customers " +
+                    "WHERE email = '" + email + "' " +
+                    "AND password = '" + new String(password) + "'");
             if (rs.next()) {
-                return new Customers(
+                return new Customer(
                         rs.getInt("id"),
                         rs.getString("first_name"),
                         rs.getString("last_name"),
@@ -96,7 +53,7 @@ public class Repository {
                         rs.getString("city"),
                         rs.getString("email"),
                         rs.getString("phone_number"),
-                        rs.getString("password"));
+                        rs.getString("password").toCharArray());
             } else {
                 System.out.println("No customer found.");
                 return null;
@@ -108,57 +65,83 @@ public class Repository {
         }
     }
 
-    // find an item in items by the brand, name, color and size. return the item id.
-    public static int findItem(String brand, String name, String color, String size) {
+    public static ArrayList<Item> getAllItemsInStock() {
         new Repository();
+        ArrayList<Item> allItemsList = new ArrayList<>();
+        Map<Integer, List<Category>> itemCategoriesMap = new HashMap<>();
+
+        String sql= "SELECT i.*, b.*, c.*, s.*, cat.*, hc.* " +
+                "FROM item i " +
+                "JOIN brand b ON i.brand_id = b.id " +
+                "JOIN color c ON i.color_id = c.id " +
+                "JOIN size s ON i.size_id = s.id " +
+                "JOIN has_category hc ON i.id = hc.item_id " +
+                "JOIN category cat ON hc.category_id = cat.id " +
+                "WHERE i.stock_balance > 0";
+
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
                 p.getProperty("name"),
                 p.getProperty("password"))) {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT i.id FROM Items i " +
-                    "JOIN Brand b ON i.brand_id = b.id " +
-                    "JOIN Sizes s ON i.size_id = s.id " +
-                    "JOIN Colors c ON i.color_id = c.id " +
-                    "WHERE b.name = '" + brand + "' AND i.name = '" + name + "' AND c.name = '" + color + "' AND s.size = '" + size + "'");
-            if (rs.next()) {
-                return rs.getInt("id");
-            } else {
-                System.out.println("Item not found.");
-                return 0;
+            ResultSet rs = st.executeQuery(sql);
+
+            // lista över alla items i databasen med stock_balance > 0
+            while (rs.next()) {
+                Item item = new Item(
+                        rs.getInt("i.id"),
+                        new Brand(rs.getInt("b.id"), rs.getString("b.name")),
+                        rs.getString("name"),
+                        new Size(rs.getInt("s.id"), rs.getString("s.size")),
+                        rs.getDouble("price"),
+                        new Color(rs.getInt("c.id"), rs.getString("c.name")),
+                        rs.getInt("stock_balance"));
+                allItemsList.add(item);
+
+                // mappar rätt kategorier till rätt item genom has_category tabellen
+                if (itemCategoriesMap.containsKey(rs.getInt("i.id"))) {
+                    itemCategoriesMap.get(rs.getInt("i.id")).add(
+                            new Category(rs.getInt("cat.id"), rs.getString("cat.name")));
+                } else {
+                    List<Category> categories = new ArrayList<>();
+                    categories.add(
+                            new Category(rs.getInt("cat.id"), rs.getString("cat.name")));
+                    itemCategoriesMap.put(rs.getInt("i.id"), categories);
+                }
+
+                // lägger till rätt kategorier i item
+                item.setCategories(itemCategoriesMap.get(rs.getInt("i.id")));
             }
+            return allItemsList;
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.out.println("SQL exception");
-            return 0;
+            return null;
         }
     }
 
-    // get item by id
-    public static ItemDetails getItemById(int item_id) {
+    // get all categories from database and pair with their respective items id by using the has_category table
+    public static ArrayList<Category> getAllCategories() {
         new Repository();
+        ArrayList<Category> allCategoriesList = new ArrayList<>();
+        String sql= "SELECT cat.*, hc.* " +
+                "FROM category cat " +
+                "JOIN has_category hc ON cat.id = hc.category_id";
+
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
                 p.getProperty("name"),
                 p.getProperty("password"))) {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT i.id, b.name as brand_name, i.name, s.size, c.name as color_name, i.price, i.stock_balance FROM Items i " +
-                    "JOIN Brand b ON i.brand_id = b.id " +
-                    "JOIN Sizes s ON i.size_id = s.id " +
-                    "JOIN Colors c ON i.color_id = c.id " +
-                    "WHERE i.id = '" + item_id + "'");
-            if (rs.next()) {
-                return new ItemDetails(
-                        rs.getInt("id"),
-                        rs.getString("brand_name"),
-                        rs.getString("name"),
-                        rs.getString("color_name"),
-                        rs.getString("size"),
-                        rs.getDouble("price"));
-            } else {
-                System.out.println("Item not found.");
-                return null;
+            ResultSet rs = st.executeQuery(sql);
+
+            // list of all categories
+            while (rs.next()) {
+                allCategoriesList.add(new Category(
+                        rs.getInt("cat.id"),
+                        rs.getString("cat.name")));
             }
+            return allCategoriesList;
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.out.println("SQL exception");
@@ -187,5 +170,30 @@ public class Repository {
             ex.printStackTrace();
             System.out.println("SQL exception");
         } return 0;
+    }
+
+    public static void main(String[] args) {
+        List<Item> items = getAllItemsInStock();
+        assert items != null;
+        System.out.println("Brand | Name | Size | Price | Color | Stock | Categories");
+        System.out.println("------------------------------------------------------------");
+        for (Item item : items) {
+            StringBuilder categoriesString = new StringBuilder();
+            for (Category category : item.getCategories()) {
+                categoriesString.append(category.getName()).append(", ");
+            }
+            if (categoriesString.length() > 0) {
+                categoriesString.delete(categoriesString.length() - 2, categoriesString.length());
+            }
+            System.out.println(
+                    item.getName() + " " +
+                            item.getBrand_id().getName() + " " +
+                            item.getSize_id().getSize() + " " +
+                            item.getPrice() + " " +
+                            item.getColor_id().getName() + " " +
+                            item.getStock_balance() + " " +
+                            categoriesString);
+        }
+
     }
 }

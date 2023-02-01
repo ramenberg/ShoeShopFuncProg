@@ -1,16 +1,20 @@
 package DBTables;
 
-public class Items {
+import java.util.List;
+
+public class Item {
 
     private int id;
-    private int brand_id;
+    private Brand brand_id;
     private String name;
-    private int size_id;
+    private Size size_id;
     private double price;
-    private int color_id;
+    private Color color_id;
     private int stock_balance;
 
-    public Items(int id, int brand_id, String name, int size_id, double price, int color_id, int stock_balance) {
+    private List<Category> categories;
+
+    public Item(int id, Brand brand_id, String name, Size size_id, double price, Color color_id, int stock_balance) {
         this.id = id;
         this.brand_id = brand_id;
         this.name = name;
@@ -18,6 +22,17 @@ public class Items {
         this.price = price;
         this.color_id = color_id;
         this.stock_balance = stock_balance;
+    }
+
+    public Item(int id, Brand brand_id, String name, Size size_id, double price, Color color_id, int stock_balance, List<Category> categories) {
+        this.id = id;
+        this.brand_id = brand_id;
+        this.name = name;
+        this.size_id = size_id;
+        this.price = price;
+        this.color_id = color_id;
+        this.stock_balance = stock_balance;
+        this.categories = categories;
     }
 
     public int getId() {
@@ -28,11 +43,11 @@ public class Items {
         this.id = id;
     }
 
-    public int getBrand_id() {
+    public Brand getBrand_id() {
         return brand_id;
     }
 
-    public void setBrand_id(int brand_id) {
+    public void setBrand_id(Brand brand_id) {
         this.brand_id = brand_id;
     }
 
@@ -44,11 +59,11 @@ public class Items {
         this.name = name;
     }
 
-    public int getSize_id() {
+    public Size getSize_id() {
         return size_id;
     }
 
-    public void setSize_id(int size_id) {
+    public void setSize_id(Size size_id) {
         this.size_id = size_id;
     }
 
@@ -60,11 +75,11 @@ public class Items {
         this.price = price;
     }
 
-    public int getColor_id() {
+    public Color getColor_id() {
         return color_id;
     }
 
-    public void setColor_id(int color_id) {
+    public void setColor_id(Color color_id) {
         this.color_id = color_id;
     }
 
@@ -75,4 +90,13 @@ public class Items {
     public void setStock_balance(int stock_balance) {
         this.stock_balance = stock_balance;
     }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
 }
+

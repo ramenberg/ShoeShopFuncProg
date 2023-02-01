@@ -3,11 +3,11 @@ package DBTables;
 public class Orders {
 
     private int id;
-    private int customer_id;
+    private Customer customer_id;
     private String order_date;
     private double total_price;
 
-    public Orders(int id, int customer_id, String order_date, double total_price) {
+    public Orders(int id, Customer customer_id, String order_date, double total_price) {
         this.id = id;
         this.customer_id = customer_id;
         this.order_date = order_date;
@@ -22,11 +22,11 @@ public class Orders {
         this.id = id;
     }
 
-    public int getCustomer_id() {
+    public Customer getCustomer_id() {
         return customer_id;
     }
 
-    public void setCustomer_id(int customer_id) {
+    public void setCustomer_id(Customer customer_id) {
         this.customer_id = customer_id;
     }
 
