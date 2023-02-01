@@ -1,6 +1,6 @@
 package DBTables;
 
-public class Color {
+public final class Color {
 
     private int id;
     private String name;

@@ -1,6 +1,6 @@
 package DBTables;
 
-public class Size {
+public final class Size {
 
     private int id;
     private String size;

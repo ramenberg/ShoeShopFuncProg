@@ -1,6 +1,6 @@
 package DBTables;
 
-public class Category {
+public final class Category {
 
     private int id;
     private String name;

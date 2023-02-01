@@ -1,6 +1,6 @@
 package DBTables;
 
-public class Customer {
+public final class Customer {
 
     private int id;
     private String first_name;

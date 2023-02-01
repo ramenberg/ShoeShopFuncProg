@@ -1,6 +1,6 @@
 package DBTables;
 
-public class Orders_Item {
+public final class Orders_Item {
 
     private Orders order_id;
     private Item item_id;

@@ -1,6 +1,6 @@
 package DBTables;
 
-public class Has_Category {
+public final class Has_Category {
 
     private Item item_id;
     private Category category_id;

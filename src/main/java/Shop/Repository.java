@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Repository {
 
-    static Properties p = new Properties();
+    static final Properties p = new Properties();
 
     public Repository() {
         try {
@@ -17,21 +17,21 @@ public class Repository {
             e.printStackTrace();
         }
     }
-    public static boolean validateLogin(String email, char[] password) {
-        try (Connection con = DriverManager.getConnection(
-                p.getProperty("connectionString"),
-                p.getProperty("name"),
-                p.getProperty("password"))) {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM customer " +
-                    "WHERE email = '" + email + "' " +
-                    "AND password = '" + new String(password) + "'");
-            return rs.next();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        }
-    }
+//    public static boolean validateLogin(String email, char[] password) {
+//        try (Connection con = DriverManager.getConnection(
+//                p.getProperty("connectionString"),
+//                p.getProperty("name"),
+//                p.getProperty("password"))) {
+//            Statement st = con.createStatement();
+//            ResultSet rs = st.executeQuery("SELECT * FROM customer " +
+//                    "WHERE email = '" + email + "' " +
+//                    "AND password = '" + new String(password) + "'");
+//            return rs.next();
+//        } catch (SQLException ex) {
+//            ex.printStackTrace();
+//            return false;
+//        }
+//    }
 
     public static Customer validateLoginReturnCustomer(String email, char[] password) {
         try (Connection con = DriverManager.getConnection(

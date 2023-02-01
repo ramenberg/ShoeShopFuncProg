@@ -31,7 +31,8 @@ public class Main {
                 String email = sc.nextLine();
                 System.out.print("Enter your password: ");
                 char[] password = sc.nextLine().toCharArray();
-                Customer customer = Repository.validateLoginReturnCustomer(email, password); // kolla om inloggningen lyckades
+                final Customer customer; // immutable
+                customer = Repository.validateLoginReturnCustomer(email, password); // kolla om inloggningen lyckades
                 if (customer != null) { // om inloggningen lyckades finns en kund sparad, annars null
                     // loop för programmet om inloggningen lyckades
                     System.out.println();
@@ -60,7 +61,8 @@ public class Main {
                             }
                             default -> System.out.println("Invalid choice!");
                         }
-                        if (cartItems.size() != 0) {
+
+                        if (cartItems.size() > 0) {
                             System.out.println("----------------------------");
                             System.out.println("Do you want to checkout? ");
                             System.out.println("1. Yes");

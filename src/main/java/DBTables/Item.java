@@ -2,7 +2,7 @@ package DBTables;
 
 import java.util.List;
 
-public class Item {
+public final class Item {
 
     private int id;
     private Brand brand_id;
