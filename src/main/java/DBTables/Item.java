@@ -6,7 +6,7 @@ public class Item {
 
     private int id;
     private Brand brand_id;
-    private String name;
+    private String model;
     private Size size_id;
     private double price;
     private Color color_id;
@@ -14,20 +14,20 @@ public class Item {
 
     private List<Category> categories;
 
-    public Item(int id, Brand brand_id, String name, Size size_id, double price, Color color_id, int stock_balance) {
+    public Item(int id, Brand brand_id, String model, Size size_id, double price, Color color_id, int stock_balance) {
         this.id = id;
         this.brand_id = brand_id;
-        this.name = name;
+        this.model = model;
         this.size_id = size_id;
         this.price = price;
         this.color_id = color_id;
         this.stock_balance = stock_balance;
     }
 
-    public Item(int id, Brand brand_id, String name, Size size_id, double price, Color color_id, int stock_balance, List<Category> categories) {
+    public Item(int id, Brand brand_id, String model, Size size_id, double price, Color color_id, int stock_balance, List<Category> categories) {
         this.id = id;
         this.brand_id = brand_id;
-        this.name = name;
+        this.model = model;
         this.size_id = size_id;
         this.price = price;
         this.color_id = color_id;
@@ -51,12 +51,12 @@ public class Item {
         this.brand_id = brand_id;
     }
 
-    public String getName() {
-        return name;
+    public String getModel() {
+        return model;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setModel(String name) {
+        this.model = name;
     }
 
     public Size getSize_id() {

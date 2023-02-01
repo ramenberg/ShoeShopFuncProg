@@ -24,17 +24,17 @@ public class Main {
         sc.nextLine();
 
         switch (choice) {
-            case 1:
+            case 1 -> {
                 System.out.print("Enter your email: ");
                 String email = sc.nextLine();
                 System.out.print("Enter your password: ");
                 char[] password = sc.nextLine().toCharArray();
-                if (Repository.validateLogin(email, password)) {
+                c = Repository.validateLoginReturnCustomer(email, password); // kolla om inloggningen lyckades
+                if (c != null) { // om inloggningen lyckades finns en kund sparad, annars null
                     // loop för programmet om inloggningen lyckades
                     while (true) {
                         System.out.println("Login successful!");
-                        System.out.println("Welcome " + Repository.getCustomer(email, password).getFirst_name() + "!");
-                        c = Repository.getCustomer(email, password); // sparar ner kunden i en variabel
+                        System.out.println("Welcome " + c.getFirst_name() + c.getLast_name() + "!");
 
                         // början av val
 
@@ -47,22 +47,82 @@ public class Main {
                         choice = sc.nextInt();
                         sc.nextLine();
                         switch (choice) {
-                            case 1:
-                                System.out.println("Available brands and models: ");
-                                System.out.println("----------------------------");
+                            case 1 -> Shopping s = new Shopping();
+                            case 2 -> {
+                                System.out.println("Goodbye!");
+                                System.exit(0);
+                            }
+                            default -> System.out.println("Invalid choice!");
+                        }
+                        if (s != null) {
+                            System.out.println("----------------------------");
+                            System.out.println("Do you want to continue shopping? ");
+                            System.out.println("1. Yes");
+                            System.out.println("2. No");
+                            System.out.println("Enter your choice: ");
+                            choice = sc.nextInt();
+                            sc.nextLine();
+                            switch (choice) {
+                                case 1 -> {
+                                    List<Item> cartItems = Shopping.startShopping();
+                                    // checkout
+                                    if (cartItems!= null) {
+                                        System.out.println("----------------------------");
+                                        System.out.println("Your shopping cart is:");
+                                        System.out.println("----------------------------");
+                                        for (Item i : cartItems) {
+                                            System.out.println(i);
+                                        }
+                                        System.out.println("Subtotal: " + Shopping.getSubtotal() + " SEK. ");
+                                        System.out.println("----------------------------");
+                                        System.out.println("Submit order? ");
+                                        System.out.println("1. Yes");
+                                        System.out.println("2. Cancel");
+                                        System.out.println("Enter your choice: ");
+                                        choice = sc.nextInt();
+                                        switch (choice) {
+                                            case 1 -> {
+                                                System.out.println("----------------------------");
+                                                System.out.println("Your order has been submitted!");
+                                                System.out.println("----------------------------");
+                                                System.out.println("Your order is:");
+                                                System.out.println("----------------------------");
+                                                for (Item i : cartItems) {
+                                                    System.out.println(i);
+                                                }
+                                                System.out.println("Subtotal: " + Shopping.getSubtotal() + " SEK. ");
+                                                System.out.println("----------------------------");
+                                                System.out.println("Thanks for shopping!");
+                                                System.exit(0);
+                                            }
+                                            case 2 -> {
+                                                System.out.println("----------------------------");
+                                                System.out.println("Your order has been cancelled!");
+                                                System.out.println("----------------------------");
+                                                System.out.println("Thanks for shopping!");
+                                                System.exit(0);
+                                            }
+                                            default -> System.out.println("Invalid choice!");
+                                        }
+                                    }
+                                }
+                                case 2 -> {
+                                    System.out.println("Thanks for shopping!");
+                                    System.exit(0);
+                                }
+                                default -> System.out.println("Invalid choice!");
+                            }
                         }
                     }
                 } else {
                     System.out.println("Login failed!");
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 System.out.println("Goodbye!");
                 System.exit(0);
-                break;
-            default:
-                System.out.println("Invalid choice!");
-                break;
+            }
+            default -> System.out.println("Invalid choice!");
         }
     }
 }
