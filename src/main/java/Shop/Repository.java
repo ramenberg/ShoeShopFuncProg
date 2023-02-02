@@ -1,10 +1,13 @@
 package Shop;
 
 import DBTables.*;
+import com.mysql.cj.protocol.Resultset;
 
 import java.io.FileInputStream;
 import java.sql.*;
 import java.util.*;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class Repository {
 
@@ -115,33 +118,41 @@ public class Repository {
         }
     }
 
-    public static int addToOrder(int customer_id, int item_id) { // TODO ta in orderid? kan vara null eller tilldelat
+    public static int addToOrder(int orders_id, int customer_id, int item_id) {
+        System.out.println("DEBUG " + orders_id + " " + customer_id + " " + item_id);
+//        int result;
+        int newOrderId = -2;
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
                 p.getProperty("name"),
                 p.getProperty("password"))) {
-            CallableStatement cStmt = con.prepareCall("{call AddToCart(?, ?, ?, ?, ?)}");
-            cStmt.setInt(1, 0);
-            cStmt.setInt(2, customer_id);
-            cStmt.setInt(3, item_id);
-            cStmt.registerOutParameter(4, java.sql.Types.INTEGER); // TODO ta bort denna utparameter?
-            cStmt.registerOutParameter(5, java.sql.Types.INTEGER);
-            cStmt.execute();
-            int result = cStmt.getInt(4);
-            if (result == 1) {
+            CallableStatement cs = con.prepareCall("{call AddToCart(?, ?, ?, ?)}");
+            cs.setInt(1, orders_id);
+            cs.setInt(2, customer_id);
+            cs.setInt(3, item_id);
+            cs.registerOutParameter(4, java.sql.Types.INTEGER); // int nya orderid
+            boolean result = cs.execute();
+
+            while (result) {
+                ResultSet rs = cs.getResultSet();
+                while (rs.next()) {
+                    System.out.println(rs.getInt("id"));
+                }
+            }
+
+            newOrderId = cs.getInt(4);
+
+            if (newOrderId > 0) {
                 System.out.println("Item added to the cart successfully.");
-                return cStmt.getInt(5); // returnerar orderid
-            } else if (result == 0) {
+            } else if (newOrderId == 0) {
                 System.out.println("Item is out of stock.");
-                return -1;
             } else {
                 System.out.println("An error occurred while adding the item to the cart.");
-                return -1;
             }
         } catch (SQLException ex) {
             System.out.println("An error occurred while calling the AddToCart stored procedure: " + ex.getMessage());
         }
-        return -1;
+        return newOrderId;
     }
 
 //    public static void main(String[] args) {

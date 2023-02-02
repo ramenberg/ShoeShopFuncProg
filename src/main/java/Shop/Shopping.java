@@ -17,11 +17,9 @@ public class Shopping {
         List<Item> allItems = getAllItemsInStock();
         Item selectedItem;
 
-        if (allItems == null) {
+        if (allItems.size() == 0) {
             System.out.println("No items in stock.");
-            return cartItems;}
-
-        else {
+        } else {
             Set<String> allBrands = allItems.stream()
                     .map(Item::getBrand_id)
                     .map(Brand::getName)
@@ -29,7 +27,7 @@ public class Shopping {
 
             if (allBrands.isEmpty()) {
                 System.out.println("No items in stock.");
-                return cartItems;
+                return null;
 
             } else {
                 System.out.println();
@@ -106,39 +104,47 @@ public class Shopping {
                 }
             }
 
+            // item är nu valt och
             if (selectedItem != null) {
                 System.out.println();
                 System.out.println("You have selected the following item:");
                 System.out.println("----------------------------");
-                System.out.println(
-                        selectedItem.getBrand_id().getName() + " " +
-                        selectedItem.getModel() + ", " +
-                        selectedItem.getColor_id().getName() + ", " +
-                        selectedItem.getSize_id().getSize() + ", Price: " +
-                        selectedItem.getPrice() +" SEK");
+                System.out.println(selectedItem.minimumToString());
                 System.out.println("----------------------------");
                 System.out.println("Do you want to add it to the cart? ");
                 System.out.println("1. Yes");
                 System.out.println("2. No");
                 System.out.println("Enter your choice: ");
 
-                int choice = sc.nextInt();
+                int choiceAddToCart = sc.nextInt();
 
-                switch (choice) {
+                switch (choiceAddToCart) {
                     case 1:
-                        cartItems.add(selectedItem);
-                        System.out.println("Item has been added to the cart.");
+                        System.out.println("Enter quantity: ");
+                        int quantity = sc.nextInt();
+                        if (quantity <= 0) {
+                            System.out.println("Invalid quantity. Please try again.");
+                        } else {
+                            for (int i = 0; i < quantity; i++) { // eftersom min stored procedure tar emot quantity
+                                cartItems.add(selectedItem);
+                            }
+                            System.out.println("Item has been added to the cart.");
+                        } break;
                     case 2:
+                        System.out.println("Item has not been added to the cart.");
                         break;
                     default:
                         System.out.println("Invalid input. Please try again.");
                         break;
                 }
+
                 System.out.println("--------------------");
                 System.out.println("What do you want to do next? ");
                 System.out.println("1. Add more items to cart");
                 System.out.println("2. Checkout");
+                System.out.println("3. Exit");
                 System.out.println("Enter your choice: ");
+
                 int continueShopping = sc.nextInt();
 
                 switch (continueShopping) {
@@ -147,13 +153,18 @@ public class Shopping {
                     case 2:
                         // TODO tillbaka tll main, visa kundvagnen
                         return cartItems;
+                    case 3:
+                        System.out.println("Thank you for shopping with us. See you next time!");
+                        System.exit(0);
                     default:
                         System.out.println("Invalid input. Please try again.");
                         break;
                 }
+            } else {
+                System.out.println("No items found.");
             }
             return null;
-        }
+        } return null;
     }
     public static double getSubtotal() {
         double subtotal = 0;
@@ -161,6 +172,14 @@ public class Shopping {
             subtotal += item.getPrice();
         }
         return subtotal;
+    }
+    public static void printItems(Item i) {
+        System.out.println(
+                i.getBrand_id().getName() + " " +
+                        i.getModel() + ", " +
+                        i.getColor_id().getName() + ", " +
+                        i.getSize_id().getSize() + ", Price: " +
+                        i.getPrice() +" SEK");
     }
 }
 

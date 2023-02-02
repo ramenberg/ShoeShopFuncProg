@@ -98,5 +98,25 @@ public final class Item {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
+    public String minimumToString() {
+        return brand_id.getName() + " " +
+                model + ", " +
+                color_id.getName() + ", " +
+                size_id.getSize() + ", Price: " +
+                price + " SEK";
+    }
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", brand_id=" + brand_id +
+                ", model='" + model + '\'' +
+                ", size_id=" + size_id +
+                ", price=" + price +
+                ", color_id=" + color_id +
+                ", stock_balance=" + stock_balance +
+                ", categories=" + categories +
+                '}';
+    }
 }
 
