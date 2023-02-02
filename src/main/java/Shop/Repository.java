@@ -120,7 +120,7 @@ public class Repository {
 
     public static int addToOrder(int orders_id, int customer_id, int item_id) {
         System.out.println("DEBUG " + orders_id + " " + customer_id + " " + item_id);
-//        int result;
+
         int newOrderId = -2;
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
@@ -131,16 +131,14 @@ public class Repository {
             cs.setInt(2, customer_id);
             cs.setInt(3, item_id);
             cs.registerOutParameter(4, java.sql.Types.INTEGER); // int nya orderid
-            boolean result = cs.execute();
+            boolean hadResult = cs.execute();
 
-            while (result) {
+            while (hadResult) { // TODO här
                 ResultSet rs = cs.getResultSet();
                 while (rs.next()) {
-                    System.out.println(rs.getInt("id"));
+                    newOrderId = rs.getInt(4);
                 }
             }
-
-            newOrderId = cs.getInt(4);
 
             if (newOrderId > 0) {
                 System.out.println("Item added to the cart successfully.");
