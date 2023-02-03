@@ -1,7 +1,5 @@
 package DBTables;
 
-import java.util.List;
-
 public final class Item {
 
     private int id;
@@ -12,8 +10,6 @@ public final class Item {
     private Color color_id;
     private int stock_balance;
 
-    private List<Category> categories;
-
     public Item(int id, Brand brand_id, String model, Size size_id, double price, Color color_id, int stock_balance) {
         this.id = id;
         this.brand_id = brand_id;
@@ -22,17 +18,6 @@ public final class Item {
         this.price = price;
         this.color_id = color_id;
         this.stock_balance = stock_balance;
-    }
-
-    public Item(int id, Brand brand_id, String model, Size size_id, double price, Color color_id, int stock_balance, List<Category> categories) {
-        this.id = id;
-        this.brand_id = brand_id;
-        this.model = model;
-        this.size_id = size_id;
-        this.price = price;
-        this.color_id = color_id;
-        this.stock_balance = stock_balance;
-        this.categories = categories;
     }
 
     public int getId() {
@@ -91,13 +76,6 @@ public final class Item {
         this.stock_balance = stock_balance;
     }
 
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
     public String minimumToString() {
         return brand_id.getName() + " " +
                 model + ", " +
@@ -115,7 +93,6 @@ public final class Item {
                 ", price=" + price +
                 ", color_id=" + color_id +
                 ", stock_balance=" + stock_balance +
-                ", categories=" + categories +
                 '}';
     }
 }

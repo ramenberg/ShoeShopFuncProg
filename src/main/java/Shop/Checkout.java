@@ -22,7 +22,7 @@ public class Checkout {
                     .filter(i -> i.getBrand_id() != null &&
                             i.getColor_id() != null &&
                             i.getSize_id() != null)
-                    .forEach(Shopping::printItems);
+                    .forEach(Shopping -> System.out.println(Shopping.minimumToString()));
             System.out.println("Subtotal: " + Shopping.getSubtotal() + " SEK. ");
             System.out.println("----------------------------");
             System.out.println("Submit order? ");
@@ -33,26 +33,36 @@ public class Checkout {
 
             switch (choiceSubmit) {
                 case 1 -> {
-
-                    int finalOrderId = 0;
+                    orderId = 0;
+                    int finalOrderId;
                     // fler än en vara i kundvagnen
                     if (cart.size() > 1) {
                         finalOrderId = Repository.addToOrder(orderId, customerId, (cart.get(0)).getId());
                         for (int i = 1; i < cart.size(); i++) {
                             Repository.addToOrder(finalOrderId, customerId, (cart.get(i)).getId());
-                            System.out.println(finalOrderId);
                         }
-                    } else if (cart.size() == 1) { // en enda vara i kundvagnen
+                        System.out.println();
+                        System.out.println(">1 Your order of " + cart.size() + " item(s) has been submitted!");
+                        System.out.println("Your order number is: " + finalOrderId);
+                        cart.clear(); // tömmer varukorgen när checkout är klar
+                    }
+                    else if (cart.size() == 1) { // en enda vara i kundvagnen
                         orderId = Repository.addToOrder(orderId, customerId, cart.get(0).getId());
-                        System.out.println("DEBUG orderID: " + orderId);
+                        System.out.println();
+                        System.out.println("==1 Your order of " + cart.size() + " item(s) has been submitted!");
+                        System.out.println("Your order number is: " + orderId);
                         if (orderId >= 0) {
                             finalOrderId = orderId;
                             int finalOrderId1 = finalOrderId;
-                            System.out.println("DEBUG finalOrderId: " + finalOrderId1);
+
                             cart.stream().skip(1).forEach(i -> {
                                 Repository.addToOrder(finalOrderId1, customerId, i.getId());
-                                System.out.println("DEBUG finalOrderId1: " + finalOrderId1);
+                                System.out.println();
+                                System.out.println("==1 oid >=0 Your order of " + cart.size() + " item(s) has been submitted!");
+                                System.out.println("Your order number is: " + finalOrderId1);
+
                             });
+                            cart.clear(); // tömmer varukorgen när checkout är klar
                         } else if (orderId == -1) {
                             System.out.println("Something went wrong and your order has not been submitted.");
                         }
