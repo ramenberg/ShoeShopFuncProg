@@ -6,14 +6,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 //import static Shop.Repository.addToCart;
-import static Shop.Repository.getAllItems;
+import static Shop.Repository.getAllItemsSorted;
 
 public class ItemSelector {
 
     private static ArrayList<Item> items;
 
     public ItemSelector() {
-        items = getAllItems();
+        items = getAllItemsSorted();
         assert items != null;
 
         Set<String> brands = new HashSet<>();

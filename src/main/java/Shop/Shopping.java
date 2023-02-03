@@ -5,7 +5,7 @@ import DBTables.*;
 import java.text.Collator;
 import java.util.*;
 
-import static Shop.Repository.getAllItems;
+import static Shop.Repository.getAllItemsSorted;
 
 public class Shopping {
 
@@ -16,7 +16,7 @@ public class Shopping {
 
         collator.setStrength(Collator.PRIMARY);
         Scanner sc = new Scanner(System.in);
-        List<Item> allItems = getAllItems();
+        List<Item> allItems = getAllItemsSorted();
         Item selectedItem = null;
 
         try {
@@ -235,7 +235,7 @@ public class Shopping {
         return subtotal;
     }
     public static String getItemById(int id) {
-        List<Item> allItems = getAllItems();
+        List<Item> allItems = getAllItemsSorted();
         Item i;
         if (allItems == null || allItems.isEmpty()) {
             return null;

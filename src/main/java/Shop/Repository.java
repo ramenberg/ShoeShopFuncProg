@@ -46,7 +46,8 @@ public class Repository {
         }
     }
 
-    public static ArrayList<Item> getAllItems() {
+    // sorterad lista över alla items i databasen
+    public static ArrayList<Item> getAllItemsSorted() {
         ArrayList<Item> allItemsList = new ArrayList<>();
 
         String sql= "SELECT DISTINCT i.*, b.*, c.*, s.* " +
