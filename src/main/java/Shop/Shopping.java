@@ -41,10 +41,6 @@ public class Shopping {
                             int choiceShopping = Integer.parseInt(sc.nextLine().trim());
                             switch (choiceShopping) {
                                 case 1:
-                                    System.out.println();
-                                    System.out.println("Search for item: ");
-                                    System.out.println();
-
                                     List<String> allBrands = allItems.stream()
                                             .filter(item -> item.getStock_balance() > 0)
                                             .map(Item::getBrand_id)
@@ -56,6 +52,8 @@ public class Shopping {
                                         System.out.println("No items in stock.");
                                         break;
                                     } else {
+                                      System.out.println();
+                                        printAllItemsList(allItems); // skriver ut en lista över alla varor i lager
                                         System.out.println();
                                         System.out.println("Select a brand from the following: ");
                                         System.out.println();
@@ -156,7 +154,7 @@ public class Shopping {
                                                 if (quantity <= 0) {
                                                     System.out.println("Invalid quantity. Please try again.");
                                                 } else if (quantity > selectedItem.getStock_balance()) {
-                                                    System.out.println("Not enough items in stock. Please try again.");
+                                                    System.out.println("Item is out of stock. Please choose another item.");
                                                 }
                                                 else {
                                                     for (int i = 0; i < quantity; i++) { // eftersom min stored procedure tar emot quantity
@@ -254,6 +252,33 @@ public class Shopping {
             else {
                 return i.minimumToString();
             }
+    }
+    public static void printAllItemsList (List<Item> list) {
+        assert list != null;
+        System.out.println(String.format("%-11s", "Brand") +
+                String.format("%-21s", "Model") +
+                String.format("%-16s", "Color") +
+                String.format("%-11s", "Size") +
+                String.format("%-23s", "Price") +
+                String.format("%-20s", "Stock"));
+        System.out.println("--------------------------------------------" +
+                "---------------------------------------------------");
+        for (Item item : list) {
+            boolean isAvailable = item.getStock_balance() > 0;
+            String inStock;
+            if (isAvailable) {
+                inStock = "Yes";
+            } else {
+                inStock = "No";
+            }
+            System.out.printf("%-10s %-20s %-15s %-10s %-22s %-20s%n",
+                    item.getBrand_id().getName(),
+                    item.getModel(),
+                    "Color: " + item.getColor_id().getName(),
+                    "Size: " + item.getSize_id().getSize(),
+                    "Price: " + String.format("%.2f", item.getPrice()) + " SEK",
+                    "In stock: " + inStock);
+        }
     }
 }
 

@@ -32,6 +32,9 @@ public class Main {
                 if (choiceLogin == 1 || choiceLogin == 2) {
                     switch (choiceLogin) {
                         case 1 -> {
+                            System.out.println("----------------------------");
+                            System.out.println("Login");
+                            System.out.println("----------------------------");
                             System.out.print("Enter your email: ");
                             String email = sc.nextLine().trim();
                             System.out.print("Enter your password: ");
@@ -43,6 +46,7 @@ public class Main {
                                 // loop för programmet om inloggningen lyckades
                                 System.out.println();
                                 System.out.println("Login successful.");
+                                System.out.println();
                                 System.out.println("Welcome " + customer.getFirst_name() + " " + customer.getLast_name() + "!");
                                 while (true) {
 
@@ -83,6 +87,7 @@ public class Main {
                                     }
                                 }
                             } else {
+                                System.out.println();
                                 System.out.println("Login failed!");
                             }
                         }

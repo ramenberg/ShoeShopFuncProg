@@ -49,13 +49,13 @@ public class Repository {
     public static ArrayList<Item> getAllItems() {
         ArrayList<Item> allItemsList = new ArrayList<>();
 
-        String sql= "SELECT i.*, b.*, c.*, s.*, cat.*, hc.* " +
+        String sql= "SELECT DISTINCT i.*, b.*, c.*, s.* " +
                 "FROM item i " +
                 "JOIN brand b ON i.brand_id = b.id " +
                 "JOIN color c ON i.color_id = c.id " +
                 "JOIN size s ON i.size_id = s.id " +
-                "JOIN has_category hc ON i.id = hc.item_id " +
-                "JOIN category cat ON hc.category_id = cat.id";
+                "GROUP BY i.id, b.name, i.model, s.size, c.name " +
+                "ORDER BY b.name, i.model, c.name, s.size";
 
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),
@@ -117,22 +117,5 @@ public class Repository {
             System.out.println("SQL exception");
         }
         return newOrderId;
-    }
-
-
-    public static void printAllItemsList () {
-        List<Item> items = getAllItems();
-        assert items != null;
-        System.out.println("Brand | Model | Size | Price | Color | Stock");
-        System.out.println("---------------------------------------------");
-        for (Item item : items) {
-            System.out.println(
-                    item.getModel() + " " +
-                    item.getBrand_id().getName() + " " +
-                    item.getSize_id().getSize() + " " +
-                    item.getPrice() + " " +
-                    item.getColor_id().getName() + " " +
-                    item.getStock_balance());
-        }
     }
 }
