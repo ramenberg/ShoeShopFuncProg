@@ -3,16 +3,18 @@ package Reports;
 import Shop.Repository;
 
 import java.util.Scanner;
-import DBTables.*;
 
 public class MainReports {
 
     public MainReports() {
         Scanner sc = new Scanner(System.in);
         new Repository();
+        System.out.println("Welcome to ShoeShop reports");
 
         while (true) {
+            System.out.println();
             System.out.println("Choose from the following reports:");
+            System.out.println();
             System.out.println("1. Total sales by brand/color/size listed by customer");
             System.out.println("2. Total orders per customer");
             System.out.println("3. Total sales amount per customer");
@@ -23,22 +25,21 @@ public class MainReports {
             System.out.println();
             System.out.print("Enter your choice: ");
 
-
             try
                 {
                     int choice = sc.nextInt();
                     switch (choice) {
                         case 1 -> {
-                            System.out.println("----------------------------");
+                            System.out.println("---------------------------------------------------");
                             System.out.println("Total sales by brand/color/size listed by customer");
-                            System.out.println("----------------------------");
-                            ReportsRepository.getSalesByBrandColorSize();
+                            System.out.println("---------------------------------------------------");
+                            ReportMethods.getSalesByBrandColorSize();
                         }
                         case 2 -> {
                             System.out.println("----------------------------");
                             System.out.println("Total orders per customer");
                             System.out.println("----------------------------");
-    //                        ReportsRepository.getOrdersPerCustomer();
+                            ReportMethods.listOfAllCustomersAndNumberOfOrders();
                         }
                         case 3 -> {
                             System.out.println("----------------------------");
