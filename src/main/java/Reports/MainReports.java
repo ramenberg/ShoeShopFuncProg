@@ -30,45 +30,50 @@ public class MainReports {
                     int choice = sc.nextInt();
                     switch (choice) {
                         case 1 -> {
-                            System.out.println("---------------------------------------------------");
+                            System.out.println();
                             System.out.println("Total sales by brand/color/size listed by customer");
-                            System.out.println("---------------------------------------------------");
+                            System.out.println();
                             ReportMethods.getSalesByBrandColorSize();
+                            System.out.println();
                         }
                         case 2 -> {
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.println("Total orders per customer");
-                            System.out.println("----------------------------");
-                            ReportMethods.listOfAllCustomersAndNumberOfOrders();
+                            System.out.println();
+                            ReportMethods.printAllCustomersAndSelectedInfo("orders");
+                            System.out.println();
                         }
                         case 3 -> {
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.println("Total sales amount per customer");
-                            System.out.println("----------------------------");
-    //                        ReportsRepository.getSalesAmountPerCustomer();
+                            System.out.println();
+                            ReportMethods.printAllCustomersAndSelectedInfo("total");
+                            System.out.println();
                         }
                         case 4 -> {
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.println("Total sales by city");
-                            System.out.println("----------------------------");
+                            System.out.println();
     //                        ReportsRepository.getSalesByCity();
+                            System.out.println();
                         }
                         case 5 -> {
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.println("Total sales by model");
-                            System.out.println("----------------------------");
+                            System.out.println();
     //                        ReportsRepository.getSalesByModel();
+                            System.out.println();
                         }
                         case 6 -> {
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.println("Exit");
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.exit(0);
                         }
                         default -> {
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.println("Please enter a number between 1-6");
-                            System.out.println("----------------------------");
+                            System.out.println();
                         }
                     }
                 }

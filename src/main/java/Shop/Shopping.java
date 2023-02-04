@@ -27,7 +27,7 @@ public class Shopping {
             else {
                 while (true) {
 
-                    System.out.println("----------------------------");
+                    System.out.println();
                     System.out.println("What do you want to do? ");
                     System.out.println();
                     System.out.println("1. Search for item");
@@ -137,9 +137,9 @@ public class Shopping {
                                     if (selectedItem != null) {
                                         System.out.println();
                                         System.out.println("You have selected the following item:");
-                                        System.out.println("----------------------------");
+                                        System.out.println();
                                         System.out.println(selectedItem.minimumToString());
-                                        System.out.println("----------------------------");
+                                        System.out.println();
                                         System.out.println("Do you want to add it to the cart? ");
                                         System.out.println("1. Yes");
                                         System.out.println("2. No");

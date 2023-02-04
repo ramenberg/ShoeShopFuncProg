@@ -15,16 +15,16 @@ public class Checkout {
         Scanner sc = new Scanner(System.in);
 
         if (cart != null) {
-            System.out.println("----------------------------");
+            System.out.println();
             System.out.println("Your shopping cart has the following " + cart.size() + " item(s):");
-            System.out.println("----------------------------");
+            System.out.println();
             cart.stream()
                     .filter(i -> i.getBrand_id() != null &&
                             i.getColor_id() != null &&
                             i.getSize_id() != null)
                     .forEach(Shopping -> System.out.println(Shopping.minimumToString()));
             System.out.println("Subtotal: " + Shopping.getSubtotal() + " SEK. ");
-            System.out.println("----------------------------");
+            System.out.println();
             System.out.println("Submit order? ");
             System.out.println("1. Yes");
             System.out.println("2. Cancel");
@@ -71,15 +71,15 @@ public class Checkout {
                         }
                     }
                     else{
-                        System.out.println("----------------------------");
+                        System.out.println();
                         System.out.println("Your cart is empty!");
-                        System.out.println("----------------------------");
+                        System.out.println();
                     }
                 }
                 case 2 -> {
-                    System.out.println("----------------------------");
+                    System.out.println();
                     System.out.println("Your order has been cancelled!");
-                    System.out.println("----------------------------");
+                    System.out.println();
                     System.out.println("Thanks for shopping!");
 //                    System.exit(0);
                 }

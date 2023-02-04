@@ -17,7 +17,7 @@ public class Main {
         System.out.println("Welcome to the Shoe Shop!");
 
         while (true) {
-            System.out.println("----------------------------");
+            System.out.println();
             System.out.println("What do you want to do? ");
             System.out.println();
             System.out.println("1. Login");
@@ -32,9 +32,9 @@ public class Main {
                 if (choiceLogin == 1 || choiceLogin == 2) {
                     switch (choiceLogin) {
                         case 1 -> {
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.println("Login");
-                            System.out.println("----------------------------");
+                            System.out.println();
                             System.out.print("Enter your email: ");
                             String email = sc.nextLine().trim();
                             System.out.print("Enter your password: ");
@@ -53,11 +53,11 @@ public class Main {
                                     int orderId = 0;
                                     // början av val
 
-                                    System.out.println("----------------------------");
+                                    System.out.println();
                                     System.out.println("What do you want to do? ");
                                     System.out.println("1. Start shopping ");
                                     System.out.println("2. Exit ");
-                                    System.out.println("----------------------------");
+                                    System.out.println();
                                     System.out.print("Enter your choice: ");
                                     int choiceSearchItem = sc.nextInt();
                                     sc.nextLine();
@@ -72,7 +72,7 @@ public class Main {
 
                                     assert cartItems != null;
                                     if (cartItems.size() > 0) {
-                                        System.out.println("----------------------------");
+                                        System.out.println();
                                         System.out.println("Do you want to checkout? ");
                                         System.out.println("1. Yes");
                                         System.out.println("2. No, cancel.");

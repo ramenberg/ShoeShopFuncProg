@@ -1,6 +1,7 @@
 package Reports;
 
 import DBTables.*;
+import org.testng.annotations.Test;
 
 import java.text.Collator;
 import java.util.*;
@@ -261,24 +262,50 @@ public class ReportMethods {
             }
         }
     }
-    public static void listOfAllCustomersAndNumberOfOrders() {
+
+    @Test
+    public static void printAllCustomersAndSelectedInfo(String infoType) {
         List<Customer> allCustomers = ReportsRepository.getAllCustomers();
         List<Orders> allOrders = ReportsRepository.getAllOrders();
 
-        Map<Customer, Long> customerOrders = allOrders.stream()
-                .collect(Collectors.groupingBy(order -> allCustomers.stream()
-                        .filter(customer -> customer.getId() == order.getCustomer_id())
-                        .findFirst().orElse(null), Collectors.counting()));
+        if (allOrders == null || allCustomers == null) {
+            System.out.println("There are no orders and/or customers in the system.");
+        } else {
+            if (infoType.equalsIgnoreCase("orders")) {
+                Map<Customer, Long> customerOrders = allOrders.stream()
+                        .collect(Collectors.groupingBy(order -> allCustomers.stream()
+                                        .filter(customer -> customer.getId() == order.getCustomer_id())
+                                        .findFirst().orElse(null),
+                                Collectors.counting()));
 
-        System.out.printf("%-15s %-12s %12s", "First name", "Last name", "Order count");
-        System.out.println();
-        System.out.println("-----------------------------------------");
-        customerOrders.forEach((customer, orderCount) -> {
-            System.out.printf("%-15s %-12s %12s",
-                    customer.getFirst_name(),
-                    customer.getLast_name(),
-                    orderCount);
-            System.out.println();
-        });
+                System.out.printf("%-15s %-12s %12s", "First name", "Last name", "Order count");
+                System.out.println();
+                System.out.println("-----------------------------------------");
+                customerOrders.forEach((customer, orderCount) -> {
+                    System.out.printf("%-15s %-12s %12s",
+                            customer.getFirst_name(),
+                            customer.getLast_name(),
+                            orderCount);
+                    System.out.println();
+                });
+            } else if (infoType.equalsIgnoreCase("total")) {
+                Map<Customer, Double> customerOrders = allOrders.stream()
+                        .collect(Collectors.groupingBy(order -> allCustomers.stream()
+                                        .filter(customer -> customer.getId() == order.getCustomer_id())
+                                        .findFirst().orElse(null),
+                                Collectors.summingDouble(Orders::getTotal_price)));
+
+                System.out.printf("%-15s %12s", "Customer", "Total value of all orders");
+                System.out.println();
+                System.out.println("-----------------------------------------");
+                customerOrders.forEach((customer, sum) -> {
+                    System.out.printf("%-15s %-12s %12s",
+                            customer.getFirst_name(),
+                            customer.getLast_name(),
+                            sum + " SEK");
+                    System.out.println();
+                });
+            }
+        }
     }
 }
