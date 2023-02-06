@@ -46,8 +46,8 @@ public class Shopping {
                                     System.out.println();
                                     printAllItemsList(allItems); // skriver ut en lista över alla varor, även de som inte finns i lager
 
-                                    // lista över alla varumärken från listan över alla items i databasen.
-                                    // om man bara vill ge användaren möjlighet att välja bland varumärken
+                                    // Lista över alla varumärken från listan över alla items i databasen.
+                                    // Om man bara vill ge användaren möjlighet att välja bland varumärken
                                     // som finns i lager ändras >= 0 till > 0.
                                     List<String> allBrands = allItems.stream()
                                             .filter(item -> item.getStock_balance() >= 0)
@@ -75,8 +75,8 @@ public class Shopping {
                                         if (filteredByBrand.isEmpty()) {
                                             System.out.println("No items found for that brand.");
                                         } else {
-                                            List<String> modelsByBrand = filterAndGetNames(filteredByBrand,
-                                                    item -> item.getModel(), collator,
+                                            List<String> modelsByBrand = getFilteredItemNames(filteredByBrand,
+                                                    Item::getModel,
                                                     item -> item.getBrand_id().getName().equalsIgnoreCase(selectedBrand));
 
                                             System.out.println();
@@ -95,8 +95,8 @@ public class Shopping {
                                             if (filteredByModel.isEmpty()) {
                                                 System.out.println("No items found for that model.");
                                             } else {
-                                                List<String> colorsByModel = filterAndGetNames(filteredByModel,
-                                                        item -> item.getColor_id().getName(), collator,
+                                                List<String> colorsByModel = getFilteredItemNames(filteredByModel,
+                                                        item -> item.getColor_id().getName(),
                                                         item -> item.getModel().equalsIgnoreCase(selectedModel));
 
                                                 System.out.println();
@@ -115,8 +115,8 @@ public class Shopping {
                                                 if (filteredByColor.isEmpty()) {
                                                     System.out.println("No items found for that color.");
                                                 } else {
-                                                    List<String> sizesByColor = filterAndGetNames(filteredByColor,
-                                                            item -> item.getSize_id().getSize(), collator,
+                                                    List<String> sizesByColor = getFilteredItemNames(filteredByColor,
+                                                            item -> item.getSize_id().getSize(),
                                                             item -> item.getModel().equalsIgnoreCase(selectedModel) &&
                                                                     item.getColor_id().getName().equalsIgnoreCase(selectedColor));
 
@@ -231,13 +231,10 @@ public class Shopping {
         }
     }
     // higher order function
-    public static List<String> filterAndGetNames(List<Item> allItems, Function<Item, String> valueToMapBy,
-                                                 Collator comparator, Predicate<Item> filter) {
+    public static List<String> getFilteredItemNames(List<Item> allItems, Function<Item, String> mapBy, Predicate<Item> filter) {
         return allItems.stream()
                 .filter(filter)
-                .distinct()
-                .sorted(Comparator.comparing(valueToMapBy, comparator))
-                .map(valueToMapBy)
+                .map(mapBy)
                 .distinct()
                 .sorted()
                 .toList();

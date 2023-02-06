@@ -63,7 +63,7 @@ public class Checkout {
 
                             });
                             cart.clear(); // tömmer varukorgen när checkout är klar
-                        } else if (orderId == -1) {
+                        } else if (orderId == -1) { // -1 skickas tillbaka av StoredProcedure om något blev fel vid körning i db.
                             System.out.println("Something went wrong and your order has not been submitted.");
                         }
                         else { // betyder att orderId inte har ändrats
