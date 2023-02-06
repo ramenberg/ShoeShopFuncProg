@@ -4,6 +4,8 @@ import DBTables.*;
 
 import java.text.Collator;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static Shop.Repository.getAllItemsSorted;
 
@@ -42,7 +44,7 @@ public class Shopping {
                             switch (choiceShopping) {
                                 case 1:
                                     List<String> allBrands = allItems.stream()
-                                            .filter(item -> item.getStock_balance() > 0)
+                                            .filter(item -> item.getStock_balance() > 0) // denna filtrerar bort alla varor som inte finns i lager
                                             .map(Item::getBrand_id)
                                             .map(Brand::getName)
                                             .distinct()
@@ -53,7 +55,7 @@ public class Shopping {
                                         break;
                                     } else {
                                       System.out.println();
-                                        printAllItemsList(allItems); // skriver ut en lista över alla varor i lager
+                                        printAllItemsList(allItems); // skriver ut en lista över alla varor, även de som inte finns i lager
                                         System.out.println();
                                         System.out.println("Select a brand from the following: ");
                                         System.out.println();
@@ -70,41 +72,39 @@ public class Shopping {
                                         if (filteredByBrand.isEmpty()) {
                                             System.out.println("No items found for that brand.");
                                         } else {
-                                            List<String> namesByBrand = filteredByBrand.stream()
-                                                    .map(Item::getModel)
-                                                    .distinct()
-                                                    .sorted().toList();
+                                            List<String> modelsByBrand = filterAndGetNames(filteredByBrand,
+                                                    item -> item.getModel(), collator,
+                                                    item -> item.getBrand_id().getName().equalsIgnoreCase(selectedBrand));
 
                                             System.out.println();
                                             System.out.println("Select a model from the following: ");
                                             System.out.println();
-                                            namesByBrand.forEach(System.out::println);
+                                            modelsByBrand.forEach(System.out::println);
                                             System.out.println();
                                             System.out.print("Enter model name: ");
-                                            String selectedName = sc.nextLine().trim();
+                                            String selectedModel = sc.nextLine().trim();
 
-                                            List<Item> filteredByName = filteredByBrand.stream()
-                                                    .filter(item -> item.getModel().equalsIgnoreCase(selectedName))
+                                            List<Item> filteredByModel = filteredByBrand.stream()
+                                                    .filter(item -> item.getModel().equalsIgnoreCase(selectedModel))
                                                     .distinct()
                                                     .sorted(Comparator.comparing(Item::getModel, collator)).toList();
 
-                                            if (filteredByName.isEmpty()) {
+                                            if (filteredByModel.isEmpty()) {
                                                 System.out.println("No items found for that model.");
                                             } else {
-                                                List<String> colorsByName = filteredByName.stream()
-                                                        .map(item -> item.getColor_id().getName())
-                                                        .distinct()
-                                                        .sorted().toList();
+                                                List<String> colorsByModel = filterAndGetNames(filteredByModel,
+                                                        item -> item.getColor_id().getName(), collator,
+                                                        item -> item.getModel().equalsIgnoreCase(selectedModel));
 
                                                 System.out.println();
                                                 System.out.println("Select a color from the following: ");
                                                 System.out.println();
-                                                colorsByName.forEach(System.out::println);
+                                                colorsByModel.forEach(System.out::println);
                                                 System.out.println();
                                                 System.out.print("Enter color: ");
                                                 String selectedColor = sc.nextLine().trim();
 
-                                                List<Item> filteredByColor = filteredByName.stream()
+                                                List<Item> filteredByColor = filteredByModel.stream()
                                                         .filter(item -> item.getColor_id().getName().equalsIgnoreCase(selectedColor))
                                                         .distinct()
                                                         .sorted(Comparator.comparing(item -> item.getColor_id().getName(), collator)).toList();
@@ -112,10 +112,10 @@ public class Shopping {
                                                 if (filteredByColor.isEmpty()) {
                                                     System.out.println("No items found for that color.");
                                                 } else {
-                                                    List<String> sizesByColor = filteredByColor.stream()
-                                                            .map(item -> item.getSize_id().getSize())
-                                                            .distinct()
-                                                            .sorted().toList();
+                                                    List<String> sizesByColor = filterAndGetNames(filteredByColor,
+                                                            item -> item.getSize_id().getSize(), collator,
+                                                            item -> item.getModel().equalsIgnoreCase(selectedModel) &&
+                                                                    item.getColor_id().getName().equalsIgnoreCase(selectedColor));
 
                                                     System.out.println();
                                                     System.out.println("Select a size from the following: ");
@@ -126,7 +126,7 @@ public class Shopping {
                                                     String selectedSize = sc.nextLine().trim();
 
                                                     selectedItem = filteredByColor.stream()
-                                                            .filter(item -> item.getSize_id().getSize().equals(selectedSize))
+                                                            .filter(item -> item.getSize_id().getSize().equalsIgnoreCase(selectedSize))
                                                             .distinct().min(Comparator.comparing(item -> item.getSize_id().getSize(), collator))
                                                             .orElse(null);
                                                 }
@@ -227,6 +227,19 @@ public class Shopping {
             throw new RuntimeException(e);
         }
     }
+    // higher order function
+    public static List<String> filterAndGetNames(List<Item> allItems, Function<Item, String> valueToMapBy,
+                                                 Collator comparator, Predicate<Item> filter) {
+        return allItems.stream()
+                .filter(filter)
+                .distinct()
+                .sorted(Comparator.comparing(valueToMapBy, comparator))
+                .map(valueToMapBy)
+                .distinct()
+                .sorted()
+                .toList();
+    }
+
     public static double getSubtotal() {
         double subtotal = 0;
         for (Item item : cartItems) {

@@ -4,5 +4,4 @@ import DBTables.Item;
 
 @FunctionalInterface
 public interface PrintItem {
-    void printItem(Item item);
-}
+    void printItem(Item item);}
