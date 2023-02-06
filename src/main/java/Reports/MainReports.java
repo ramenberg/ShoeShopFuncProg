@@ -18,8 +18,8 @@ public class MainReports {
             System.out.println("1. Total sales by brand/color/size listed by customer");
             System.out.println("2. Total orders per customer");
             System.out.println("3. Total sales amount per customer");
-            System.out.println("4. Total sales by city");
-            System.out.println("5. Total sales by model");
+//            System.out.println("4. Total sales by city");
+//            System.out.println("5. Total sales by model");
             System.out.println("6. Exit");
 
             System.out.println();
