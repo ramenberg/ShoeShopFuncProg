@@ -54,8 +54,7 @@ public class Repository {
                 "FROM item i " +
                 "JOIN brand b ON i.brand_id = b.id " +
                 "JOIN color c ON i.color_id = c.id " +
-                "JOIN size s ON i.size_id = s.id " +
-                "GROUP BY i.id, b.name, i.model, s.size, c.name ";
+                "JOIN size s ON i.size_id = s.id ";
 
         try (Connection con = DriverManager.getConnection(
                 p.getProperty("connectionString"),

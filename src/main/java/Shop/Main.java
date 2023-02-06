@@ -9,8 +9,7 @@ import java.util.Scanner;
 
 public class Main {
     private static List<Item> cartItems = new ArrayList<>();
-
-    public static void main(String[] args) {
+    public Main() {
         new Repository();
         Scanner sc = new Scanner(System.in);
 
@@ -89,8 +88,7 @@ public class Main {
                                     }
                                 }
                             } else {
-                                System.out.println();
-                                System.out.println("Login failed!");
+                                System.out.println("\nLogin failed!");
                             }
                         }
                         case 2 -> {
@@ -107,5 +105,8 @@ public class Main {
             }
 
         }
+    }
+    public static void main(String[] args) {
+        new Main();
     }
 }

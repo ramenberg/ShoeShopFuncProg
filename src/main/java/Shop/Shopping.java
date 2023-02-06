@@ -43,9 +43,12 @@ public class Shopping {
                             int choiceShopping = Integer.parseInt(sc.nextLine().trim());
                             switch (choiceShopping) {
                                 case 1:
+                                    System.out.println();
+                                    printAllItemsList(allItems); // skriver ut en lista över alla varor, även de som inte finns i lager
+
+                                    // lista över alla varumärken från listan över alla items i databasen.
                                     // om man bara vill ge användaren möjlighet att välja bland varumärken
                                     // som finns i lager ändras >= 0 till > 0.
-
                                     List<String> allBrands = allItems.stream()
                                             .filter(item -> item.getStock_balance() >= 0)
                                             .map(Item::getBrand_id)
@@ -54,14 +57,10 @@ public class Shopping {
                                             .sorted().toList();
 
                                     if (allBrands.isEmpty()) {
-                                        System.out.println("No items in stock.");
+                                        System.out.println("\nNo items in stock.");
                                         break;
                                     } else {
-                                      System.out.println();
-                                        // skriver ut en lista över alla varor, även de som inte finns i lager
-                                        printAllItemsList(allItems);
-                                        System.out.println();
-                                        System.out.println("Select a brand from the following: ");
+                                        System.out.println("\nSelect a brand from the following:");
                                         System.out.println();
                                         allBrands.forEach(System.out::println);
                                         System.out.println();
