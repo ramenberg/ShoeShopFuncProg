@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static Shop.Repository.getAllItemsSorted;
+import static Shop.Repository.getAllItems;
 
 public class Shopping {
 
@@ -18,7 +18,7 @@ public class Shopping {
 
         collator.setStrength(Collator.PRIMARY);
         Scanner sc = new Scanner(System.in);
-        List<Item> allItems = getAllItemsSorted();
+        List<Item> allItems = getAllItems(); // lista över alla items i databasen
         Item selectedItem = null;
 
         try {
@@ -43,8 +43,11 @@ public class Shopping {
                             int choiceShopping = Integer.parseInt(sc.nextLine().trim());
                             switch (choiceShopping) {
                                 case 1:
+                                    // om man bara vill ge användaren möjlighet att välja bland varumärken
+                                    // som finns i lager ändras >= 0 till > 0.
+
                                     List<String> allBrands = allItems.stream()
-                                            .filter(item -> item.getStock_balance() > 0) // denna filtrerar bort alla varor som inte finns i lager
+                                            .filter(item -> item.getStock_balance() >= 0)
                                             .map(Item::getBrand_id)
                                             .map(Brand::getName)
                                             .distinct()
@@ -55,7 +58,8 @@ public class Shopping {
                                         break;
                                     } else {
                                       System.out.println();
-                                        printAllItemsList(allItems); // skriver ut en lista över alla varor, även de som inte finns i lager
+                                        // skriver ut en lista över alla varor, även de som inte finns i lager
+                                        printAllItemsList(allItems);
                                         System.out.println();
                                         System.out.println("Select a brand from the following: ");
                                         System.out.println();
@@ -248,7 +252,7 @@ public class Shopping {
         return subtotal;
     }
     public static String getItemById(int id) {
-        List<Item> allItems = getAllItemsSorted();
+        List<Item> allItems = getAllItems();
         Item i;
         if (allItems == null || allItems.isEmpty()) {
             return null;

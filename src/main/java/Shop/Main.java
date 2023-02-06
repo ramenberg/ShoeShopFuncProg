@@ -42,7 +42,8 @@ public class Main {
                             final Customer customer; // immutable
                             customer = Repository.validateLoginReturnCustomer(email, password); // kolla om inloggningen lyckades
 
-                            if (customer != null) { // om inloggningen lyckades finns en kund sparad, annars null
+                            if (customer != null) {
+                                // om inloggningen lyckades finns en kund sparad, annars null
                                 // loop för programmet om inloggningen lyckades
                                 System.out.println();
                                 System.out.println("Login successful.");
@@ -51,7 +52,8 @@ public class Main {
                                 while (true) {
 
                                     int orderId = 0;
-                                    // början av val
+
+                                    // början av val för shopping
 
                                     System.out.println();
                                     System.out.println("What do you want to do? ");
